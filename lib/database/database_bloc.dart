@@ -25,10 +25,11 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
       int currentDayInt = now.day;
       String currentDay = '$currentDayInt';
 
-
       emit(DatabaseLoadingState());
       final List<NoteModel> notes;
-      notes = await noteDatabase.getNote(event.getDateData != '' ? event.getDateData :'$currentYearn${monthNameToNumber(currentMonth)}${currentDay}' );
+      notes = await noteDatabase.getNote(event.getDateData != ''
+          ? event.getDateData
+          : '$currentYearn${monthNameToNumber(currentMonth)}${currentDay}');
       emit(DatabaseLoadedState(notes: notes));
     });
 
@@ -48,6 +49,12 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
       emit(DatabaseLoadedState(notes: notes));
     });
 
-
+    on<DatabaseDeleteEvent>((event, emit) async {
+      noteDatabase.deleteNote(event.note);
+      emit(DatabaseLoadingState());
+      final List<NoteModel> notes;
+      notes = await noteDatabase.getNote(event.note.sortId);
+      emit(DatabaseLoadedState(notes: notes));
+    });
   }
 }

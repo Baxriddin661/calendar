@@ -26,7 +26,7 @@ class DatabaseUpdateEvent extends DatabaseEvent {
 
 
 class DatabaseDeleteEvent extends DatabaseEvent {
-  final NoteModel notes;
+  final NoteModel note;
 
-  DatabaseDeleteEvent(this.notes);
+  DatabaseDeleteEvent(this.note);
 }

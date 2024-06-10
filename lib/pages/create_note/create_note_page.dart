@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -142,7 +141,7 @@ class _CreateNotePageState extends State<CreateNotePage> {
                             child: Container(
                               padding: EdgeInsets.all(10),
                               margin: EdgeInsets.all(3),
-                              color: AppColors.blueWhite,
+                              color: AppColors.rerWhite,
                             ),
                             onTap: () {
                               setState(() {
@@ -155,7 +154,7 @@ class _CreateNotePageState extends State<CreateNotePage> {
                             child: Container(
                               padding: EdgeInsets.all(10),
                               margin: EdgeInsets.all(3),
-                              color: AppColors.rerWhite,
+                              color: AppColors.blueWhite,
                             ),
                             onTap: () {
                               setState(() {
@@ -203,54 +202,60 @@ class _CreateNotePageState extends State<CreateNotePage> {
                             builder: (context, selectedDayState) {
                               var changePeriodBloc =
                                   BlocProvider.of<SelectedDayBloc>(context);
-
-                              return Center(
-                                child: ElevatedButton(
-                                  onPressed: () async {
-                                    final noteModel = NoteModel(
-                                        id: '${widget.year}${monthNameToNumber(widget.month!)}${widget.selectedDay ?? widget.day}',
+                              if (state is DatabaseLoadedState) {
+                                return Center(
+                                  child: ElevatedButton(
+                                    onPressed: () async {
+                                      final noteModel = NoteModel(
+                                        sortId:
+                                            '${widget.year}${monthNameToNumber(widget.month!)}${widget.selectedDay ?? widget.day}',
                                         title: titleController.text,
                                         description: descriptionController.text,
                                         time: timeController.text,
                                         location: locationController.text,
                                         priority: priorityValue,
+                                        id: '${widget.year}${monthNameToNumber(widget.month!)}${widget.selectedDay ?? widget.day}${state.notes.length}',
+                                      );
 
-                                    );
+                                      print('Title:${noteModel.title}');
+                                      print('Desc:${noteModel.description}');
+                                      print('Time:${noteModel.time}');
+                                      print('Loca:${noteModel.location}');
+                                      print('prior:${noteModel.priority}');
+                                      print('id:${noteModel.id}');
+                                      print('sortId:${noteModel.sortId}');
 
-                                    print('Title:${noteModel.title}');
-                                    print('Desc:${noteModel.description}');
-                                    print('Time:${noteModel.time}');
-                                    print('Loca:${noteModel.location}');
-                                    print('prior:${noteModel.priority}');
-                                    print('id:${noteModel.id}');
+                                      bloc.add(DatabaseCreateEvent(noteModel));
 
-                                    bloc.add(DatabaseCreateEvent(noteModel));
+                                      //   bloc.add(DatabaseUpdateEvent(noteModel));
+                                      // }
 
-                                    //   bloc.add(DatabaseUpdateEvent(noteModel));
-                                    // }
+                                      bloc.add(DatabaseInitEvent(
+                                          getDateData:
+                                              '${widget.year}${monthNameToNumber(widget.month!)}${widget.day}'));
 
-                                    bloc.add(DatabaseInitEvent(
-                                        getDateData:
-                                            '${widget.year}${monthNameToNumber(widget.month!)}${widget.day}'));
-
-                                    changePeriodBloc.add(OnSelectedDayEvent());
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                CalendarPage()));
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.primaryColor,
-                                      minimumSize: Size(300, 50)),
-                                  child: AppText(
-                                    'Add',
-                                    color: Colors.white,
+                                      changePeriodBloc
+                                          .add(OnSelectedDayEvent());
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CalendarPage()));
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.primaryColor,
+                                        minimumSize: Size(300, 50)),
+                                    child: AppText(
+                                      'Add',
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ),
-                              );
+                                );
+                              } else {
+                                SizedBox();
+                              }
                               // }
-                              // return SizedBox();
+                              return SizedBox();
                             })),
                   ],
                 ),

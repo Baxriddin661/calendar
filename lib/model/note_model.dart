@@ -5,14 +5,14 @@ class NoteModel {
   final String location;
   final String time;
   final String priority;
+  final String sortId;
 
-  NoteModel(
-      {required this.id,
-      required this.title,
-      required this.description,
-      required this.time,
-      required this.location,
-      required this.priority});
+  NoteModel({required this.id,
+    required this.title,
+    required this.description,
+    required this.time,
+    required this.location,
+    required this.priority, required this.sortId });
 
   factory NoteModel.fromJson(Map<String, dynamic> json) {
     return NoteModel(
@@ -21,7 +21,10 @@ class NoteModel {
         description: json['description'] ?? "",
         time: json['time'] ?? "",
         location: json['location'] ?? "",
-        priority: json['priority'] ?? "");
+        priority: json['priority'] ?? "",
+        sortId: json['sortId'] ?? ""
+
+    );
   }
 
   Map<String, dynamic> toMap() {
@@ -32,7 +35,7 @@ class NoteModel {
     map['location'] = location;
     map['time'] = time;
     map['priority'] = priority;
-
+    map['sortId'] = sortId;
     return map;
   }
 }

@@ -1,9 +1,13 @@
 import 'package:calendar_app/pages/calendar/calendar_page.dart';
 import 'package:calendar_app/utils/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-void main() {
+void main()async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
 }
 
 class MyApp extends StatelessWidget {

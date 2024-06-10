@@ -18,6 +18,7 @@ class NoteDatabase {
   String location = 'location';
   String time = 'time';
   String priority = 'priority';
+  String sortId = 'sortId';
 
   Future<Database?> get database async {
     if (_database != null) {
@@ -29,7 +30,7 @@ class NoteDatabase {
 
   Future<Database> _initDB() async {
     Directory dir = await getApplicationDocumentsDirectory();
-    String path = join('${dir.path}Note3DB.db');
+    String path = join('${dir.path}Note10DB.db');
     return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
@@ -41,12 +42,14 @@ class NoteDatabase {
         '$description TEXT,'
         '$location TEXT,'
         '$time TEXT,'
-        '$priority TEXT)');
+        '$priority TEXT,'
+        '$sortId TEXT)');
   }
 
   Future<List<NoteModel>> getNote(String id) async {
     Database? db = await database;
-    final List<Map<String, dynamic>> noteMapList = await db!.query('$table WHERE $id = $id');
+    final List<Map<String, dynamic>> noteMapList =
+        await db!.query('$table WHERE $id = $id');
     final List<NoteModel> noteList = [];
     for (var noteMap in noteMapList) {
       noteList.add(NoteModel.fromJson(noteMap));
@@ -65,14 +68,15 @@ class NoteDatabase {
   Future<int> updateNote(NoteModel note) async {
     Database? db = await database;
     return await db!.update(table, note.toMap(),
-        where: '$recordId = ?', whereArgs: [note.id]);
+        where: '$id = ?', whereArgs: [note.id]);
   }
 
   /// DELETE
-  Future<int> deleteNotes(NoteModel note) async {
+  Future<int> deleteNote(NoteModel note) async {
     Database? db = await database;
-    return await db!.delete(table,
-        where: '$recordId = ?', whereArgs: [note.id]);
-  }
 
+      return await db!
+          .delete(table, where: '$id = ?', whereArgs: [note.id]);
+
+  }
 }

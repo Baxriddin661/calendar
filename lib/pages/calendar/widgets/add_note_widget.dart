@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -81,8 +80,7 @@ class AddEventWidget extends StatelessWidget {
                                                         day: day,
                                                         selectedDay:
                                                             selectedDay)));
-
-                                         },
+                                      },
                                       style: ElevatedButton.styleFrom(
                                           backgroundColor: AppColors.blue),
                                       child: AppText(
@@ -100,22 +98,22 @@ class AddEventWidget extends StatelessWidget {
                                   child: ListView.builder(
                                       itemCount: databaseState.notes.length,
                                       itemBuilder: (context, index) {
-                                        return databaseState.notes[index].id ==
+                                        return databaseState.notes[index].sortId ==
                                                 '$year${monthNameToNumber(month)}$selectedDay'
                                             ? NoteWidget(
                                                 model: NoteModel(
-                                                    title: databaseState
-                                                        .notes[index].title,
-                                                    description: databaseState
-                                                        .notes[index]
-                                                        .description,
-                                                    time: databaseState
-                                                        .notes[index].time,
-                                                    location: databaseState
-                                                        .notes[index].location,
-                                                    priority: databaseState
-                                                        .notes[index].priority,
-                                                    id: '$year $month $week $day'))
+                                                title: databaseState
+                                                    .notes[index].title,
+                                                description: databaseState
+                                                    .notes[index].description,
+                                                time: databaseState
+                                                    .notes[index].time,
+                                                location: databaseState
+                                                    .notes[index].location,
+                                                priority: databaseState
+                                                    .notes[index].priority,
+                                                sortId: databaseState.notes[index].sortId,
+                                              id: databaseState.notes[index].id))
                                             : SizedBox();
                                       }),
                                 )

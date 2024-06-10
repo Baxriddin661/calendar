@@ -1,12 +1,14 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
+import '../../../database/database_bloc.dart';
+import '../../../database/note_database.dart';
 import '../../../utils/app_colors.dart';
 import '../../../widgets/app_text.dart';
+import '../../selected_day/selected_day_bloc.dart';
 import '../caledar_bloc/change_period_bloc.dart';
 import 'add_note_widget.dart';
+import 'day_widget.dart';
 import 'month_widget.dart';
 
 class WeekWidget extends StatelessWidget {
@@ -28,153 +30,216 @@ class WeekWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = BlocProvider.of<ChangePeriodBloc>(context);
 
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              AppText(
-                'Week ',
-                fontWeight: FontWeight.w500,
-                size: 18,
-              ),
-              const Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        bloc.add(DayPeriodEvent(day: '${int.parse(day) - 7}'));
-                        bloc.add(WeekPeriodEvent(week: week));
-                      },
-                      style: IconButton.styleFrom(
-                        backgroundColor: AppColors.greyWhite,
-                      ),
-                      color: AppColors.grey,
-                      icon: const Icon(Icons.arrow_back_ios_new)),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  IconButton(
-                      onPressed: () {
-                        bloc.add(DayPeriodEvent(day: '${int.parse(day) + 7}'));
-                        bloc.add(WeekPeriodEvent(week: week));
-                      },
-                      style: IconButton.styleFrom(
-                        backgroundColor: AppColors.greyWhite,
-                      ),
-                      color: AppColors.grey,
-                      icon: const Icon(Icons.arrow_forward_ios_rounded))
-                ],
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Column(
-            children: [
-              Container(
-                alignment: Alignment.topCenter,
-                width: double.infinity,
-                child: Wrap(
-                  alignment: WrapAlignment.start,
-                  spacing: 30,
-                  runSpacing: 15,
-                  children: List.generate(
-                    7,
-                    (index) {
-                      List<DateTime> date =
-                          getWeek(year: year, month: month, day: day);
-                      return GestureDetector(
-                          onTap: () {
-                            tapped = !tapped;
-                            print('$tapped');
-                          },
-                          child: Column(
-                            children: [
-                              Column(
-                                children: [
-                                  AppText(
-                                    monthNumberToName(date[index].month),
-                                    color: AppColors.grey,
-                                    size: 14,
-                                  ),
-                                  AppText(
-                                    weekNumberToName(date[index].weekday),
-                                    fontWeight: FontWeight.w600,
-                                  )
-                                ],
-                              ),
-                              Container(
-                                alignment: Alignment.center,
-                                width: 80,
-                                height: 80,
-                                decoration: BoxDecoration(
-                                    color: (index == 2 && tapped)
-                                        ? AppColors.primaryColor
-                                        : Colors.transparent,
-                                    border: Border.all(
-                                        color: AppColors.primaryColor),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(10))),
-                                child: AppText(
-                                  date[index].day.toString(),
-                                  fontWeight: FontWeight.w600,
-                                  size: 20,
-                                  color: (index == 27 && tapped)
-                                      ? Colors.white
-                                      : Colors.black,
+    return BlocProvider(
+        create: (context) => SelectedDayBloc(),
+        child: BlocConsumer<SelectedDayBloc, SelectedDayState>(
+            listener: (context, state) {},
+            builder: (context, selectedDayState) {
+              var selectedDayBloc = BlocProvider.of<SelectedDayBloc>(context);
+              return Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        AppText(
+                          'Week ',
+                          fontWeight: FontWeight.w500,
+                          size: 18,
+                        ),
+                        const Spacer(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  bloc.add(DayPeriodEvent(
+                                      day: '${int.parse(day) - 7}'));
+                                  bloc.add(WeekPeriodEvent(week: week));
+                                },
+                                style: IconButton.styleFrom(
+                                  backgroundColor: AppColors.greyWhite,
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 3,
-                              ),
-                              SizedBox(
-                                  width: 70,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Container(
-                                          padding: const EdgeInsets.all(5),
-                                          decoration: BoxDecoration(
-                                              color: AppColors.primaryColor,
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(50)))),
-                                      Container(
-                                          padding: const EdgeInsets.all(5),
-                                          decoration: BoxDecoration(
-                                              color: AppColors.red,
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(50)))),
-                                      Container(
-                                          padding: const EdgeInsets.all(5),
-                                          decoration: BoxDecoration(
-                                              color: AppColors.orange,
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(50)))),
-                                    ],
-                                  ))
-                            ],
-                          ));
+                                color: AppColors.grey,
+                                icon: const Icon(Icons.arrow_back_ios_new)),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  bloc.add(DayPeriodEvent(
+                                      day: '${int.parse(day) + 7}'));
+                                  bloc.add(WeekPeriodEvent(week: week));
+                                },
+                                style: IconButton.styleFrom(
+                                  backgroundColor: AppColors.greyWhite,
+                                ),
+                                color: AppColors.grey,
+                                icon:
+                                    const Icon(Icons.arrow_forward_ios_rounded))
+                          ],
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    if (selectedDayState is OnSelectedDayState) ...{
+                      _weekDaysTableWidget(
+                          selectedDayBloc: selectedDayBloc,
+                          selectedDayState: selectedDayState)
+                    }
+                  ]));
+            }));
+  }
+
+  _weekDaysTableWidget(
+      {required SelectedDayBloc selectedDayBloc,
+      required OnSelectedDayState selectedDayState}) {
+    String selectedDay;
+    return Column(children: [
+      Container(
+          alignment: Alignment.topCenter,
+          width: double.infinity,
+          child: Wrap(
+              alignment: WrapAlignment.start,
+              spacing: 30,
+              runSpacing: 15,
+              children: List.generate(7, (weekIndex) {
+                List<DateTime> date =
+                    getWeek(year: year, month: month, day: day);
+                return GestureDetector(
+                    onTap: () {
+                      selectedDayBloc.add(OnSelectedDayEvent(
+                          day: date[weekIndex].day.toString()));
+                      weekIndex;
                     },
-                  ),
-                ),
-              )
-            ],
-          ),  SizedBox(
-            height: 30,
-          ),
-          AddEventWidget(month: month, year: year, day: day, week: week)
-        ],
-      ),
-    );
+                    child: Column(children: [
+                      Column(
+                        children: [
+                          AppText(
+                            monthNumberToName(date[weekIndex].month),
+                            color: AppColors.grey,
+                            size: 14,
+                          ),
+                          AppText(
+                            weekNumberToName(date[weekIndex].weekday),
+                            fontWeight: FontWeight.w600,
+                          )
+                        ],
+                      ),
+                      Container(
+                          alignment: Alignment.center,
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                              color: selectedDayState.day ==
+                                      date[weekIndex].day.toString()
+                                  ? AppColors.primaryColor
+                                  : Colors.transparent,
+                              border: Border.all(color: AppColors.primaryColor),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10))),
+                          child: AppText(
+                            date[weekIndex].day.toString(),
+                            fontWeight: FontWeight.w600,
+                            size: 20,
+                            color: selectedDayState.day ==
+                                    date[weekIndex].day.toString()
+                                ? Colors.white
+                                : Colors.black,
+                          )),
+                      BlocProvider(
+                          create: (context) =>
+                              DatabaseBloc(noteDatabase: NoteDatabase())
+                                ..add(DatabaseInitEvent(getDateData: '')),
+                          child: BlocConsumer<DatabaseBloc, DatabaseState>(
+                              listener: (context, state) {},
+                              builder: (context, databaseState) {
+                                var databaseBloc =
+                                    BlocProvider.of<DatabaseBloc>(context);
+                                // databaseBloc.add(DatabaseInitEvent(
+                                //     getDateData:
+                                //     '${widget.year}${monthNameToNumber(widget.month)}${widget.day}'));
+
+                                return SizedBox(
+                                    width: 50,
+                                    height: 12,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        if (databaseState is DatabaseLoadedState) ...{
+                                          SizedBox(
+                                            height: 12,
+                                            width: 40,
+                                            child: ListView.builder(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                itemCount:
+                                                    databaseState.notes.length,
+                                                itemBuilder: (context, index) {
+                                                  var priority = databaseState
+                                                      .notes[index].priority;
+                                                  print(
+                                                      'Selekted: $year${monthNameToNumber(month)}$day');
+                                                  print(
+                                                      ' Database: ${databaseState.notes[index].id}');
+                                                  return
+                                                    Visibility(
+                                                    visible: databaseState.notes[index].id == '$year${monthNameToNumber(month)}${selectedDayState.day}',
+                                                    child:
+                                                    Container(
+                                                        margin: const EdgeInsets
+                                                            .only(
+                                                            left: 5, top: 3.2),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(4),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                                color: priority ==
+                                                                        '1'
+                                                                    ? AppColors
+                                                                        .red
+                                                                    : priority ==
+                                                                            '2'
+                                                                        ? AppColors
+                                                                            .blue
+                                                                        : priority ==
+                                                                                '3'
+                                                                            ? AppColors
+                                                                                .orange
+                                                                            : Colors
+                                                                                .transparent,
+                                                                borderRadius:
+                                                                    const BorderRadius
+                                                                        .all(
+                                                                        Radius.circular(
+                                                                            50)))),
+                                                      
+                                                  );
+                                                }),
+                                          )
+                                        },
+                                      ],
+                                    ));
+                              })),
+                    ]));
+
+                //
+                //       SizedBox(
+                //         height: 30,
+                //       ),
+                //
+                //     ],
+                //   ),
+                // );
+              }))),
+      AddEventWidget(month: month, year: year, day: day, week: week)
+    ]);
   }
 }
 

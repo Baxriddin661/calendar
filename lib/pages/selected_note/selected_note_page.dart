@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -204,54 +203,67 @@ class SelectedNotePage extends StatelessWidget {
                   ],
                 ),
                 Spacer(),
-                ElevatedButton(
-                  onPressed: () async {
-                    final noteModel = NoteModel(
-                        id: model.id,
-                        title: titleController.text,
-                        description: descriptionController.text,
-                        time: timeController.text,
-                        location: locationController.text,
-                        priority: model.priority);
+                BlocProvider(
+                  create: (context) => DatabaseBloc(noteDatabase: NoteDatabase()),
+                  child: BlocConsumer<DatabaseBloc, DatabaseState>(
+                    listener: (context, state) {},
+                    builder: (context, databaseState) {
+                      var bloc =
+                      BlocProvider.of<DatabaseBloc>(context);
+                      return ElevatedButton(
+                        onPressed: () async {
+                          final noteModel = NoteModel(
+                              id: model.id,
+                              title: model.title,
+                              description: model.description,
+                              time: model.time,
+                              location: model.location,
+                              priority: model.priority,
+                              sortId: model.sortId);
 
-                    print('Title:${noteModel.title}');
-                    print('Desc:${noteModel.description}');
-                    print('Time:${noteModel.time}');
-                    print('Loca:${noteModel.location}');
-                    print('prior:${noteModel.priority}');
-                    print('id:${noteModel.id}');
-                    // bloc.add(DatabaseUpdateEvent(noteModel));
-                    // } else {
-                    //   print('Update:${titleController.text}');
+                          print('Title:${noteModel.title}');
+                          print('Desc:${noteModel.description}');
+                          print('Time:${noteModel.time}');
+                          print('Loca:${noteModel.location}');
+                          print('prior:${noteModel.priority}');
+                          print('id:${noteModel.id}');
+                          print('sortId:${noteModel.sortId}');
 
-                    //   bloc.add(DatabaseUpdateEvent(noteModel));
-                    // }
 
-                    // bloc.add(DatabaseInitEvent(
-                    //     getDateData: '${widget.year}${monthNameToNumber(widget.month!)}${widget.day}'));
+                          bloc.add(DatabaseDeleteEvent(noteModel));
+                          // } else {
+                          //   print('Update:${titleController.text}');
 
-                    // changePeriodBloc.add(OnSelectedDayEvent());
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CalendarPage()));
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.rerWhite,
-                      minimumSize: Size(300, 50)),
+                          //   bloc.add(DatabaseUpdateEvent(noteModel));
+                          // }
 
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.delete_forever_rounded,
-                        color: AppColors.red,
-                      ),
-                      AppText(
-                        'Delete event',
-                        color: Colors.black,
-                      ),
-                    ],
+                          // bloc.add(DatabaseInitEvent(
+                          //     getDateData: '${widget.year}${monthNameToNumber(widget.month!)}${widget.day}'));
+
+                          // changePeriodBloc.add(OnSelectedDayEvent());
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CalendarPage()));
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.rerWhite,
+                            minimumSize: Size(300, 50)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.delete_forever_rounded,
+                              color: AppColors.red,
+                            ),
+                            AppText(
+                              'Delete event',
+                              color: Colors.black,
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 )
               ],
@@ -382,7 +394,8 @@ class SelectedNotePage extends StatelessWidget {
                                               descriptionController.text,
                                           time: timeController.text,
                                           location: locationController.text,
-                                          priority: model.priority);
+                                          priority: model.priority,
+                                          sortId: model.sortId);
 
                                       print('Title:${noteModel.title}');
                                       print('Desc:${noteModel.description}');
@@ -390,7 +403,10 @@ class SelectedNotePage extends StatelessWidget {
                                       print('Loca:${noteModel.location}');
                                       print('prior:${noteModel.priority}');
                                       print('id:${noteModel.id}');
+                                      print('sortId:${noteModel.sortId}');
+
                                       bloc.add(DatabaseUpdateEvent(noteModel));
+
                                       // } else {
                                       //   print('Update:${titleController.text}');
 

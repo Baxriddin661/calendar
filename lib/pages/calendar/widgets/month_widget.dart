@@ -1,4 +1,3 @@
-
 import 'package:calendar_app/pages/calendar/widgets/week_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -107,12 +106,16 @@ class _MonthWidgetState extends State<MonthWidget> {
                   ),
                   BlocProvider(
                     create: (context) =>
-                        DatabaseBloc(noteDatabase: NoteDatabase()),
+                        DatabaseBloc(noteDatabase: NoteDatabase())
+                          ..add(DatabaseInitEvent(getDateData: '')),
                     child: BlocConsumer<DatabaseBloc, DatabaseState>(
                         listener: (context, state) {},
                         builder: (context, databaseState) {
                           var databaseBloc =
                               BlocProvider.of<DatabaseBloc>(context);
+                          // databaseBloc.add(DatabaseInitEvent(
+                          //     getDateData:
+                          //     '${widget.year}${monthNameToNumber(widget.month)}${widget.day}'));
 
                           return Column(
                             children: [
@@ -162,11 +165,7 @@ class _MonthWidgetState extends State<MonthWidget> {
                                               selectedDayBloc.add(
                                                   OnSelectedDayEvent(
                                                       day: '$selectedDay'));
-                                              databaseBloc.add(DatabaseInitEvent(
-                                                  getDateData:
-                                                      '${widget.year}${monthNameToNumber(widget.month)}${widget.day}'));
-
-                                             },
+                                            },
                                             child: SizedBox(
                                               width: 30,
                                               child: Column(
@@ -236,7 +235,7 @@ class _MonthWidgetState extends State<MonthWidget> {
                                                                             .priority;
                                                                         return Visibility(
                                                                           visible:
-                                                                              databaseState.notes[index].id == '${widget.year}${monthNameToNumber(widget.month)}${monthIndex + 1}',
+                                                                              databaseState.notes[index].sortId == '${widget.year}${monthNameToNumber(widget.month)}${monthIndex + 1}',
                                                                           child: Container(
                                                                               margin: EdgeInsets.only(left: 2),
                                                                               padding: const EdgeInsets.all(2.2),

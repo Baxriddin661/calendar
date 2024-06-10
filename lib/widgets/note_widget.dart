@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../model/note_model.dart';
@@ -13,21 +12,17 @@ class NoteWidget extends StatelessWidget {
   late Color mainColor;
   late Color bgColor;
 
-
   @override
   Widget build(BuildContext context) {
     if (model.priority == "1") {
-      print(model.priority);
       mainColor = AppColors.red;
       bgColor = AppColors.rerWhite;
     } else if (model.priority == "2") {
       mainColor = AppColors.blue;
       bgColor = AppColors.blueWhite;
-      print(model.priority);
     } else {
       mainColor = AppColors.orange;
       bgColor = AppColors.orangeWhite;
-      print(model.priority);
     }
 
     return InkWell(
@@ -48,8 +43,7 @@ class NoteWidget extends StatelessWidget {
             color: bgColor,
             borderRadius: const BorderRadius.all(Radius.circular(10)),
             border: Border(top: BorderSide(width: 10, color: mainColor))),
-        child:
-        Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AppText(

@@ -1,5 +1,3 @@
-
-
 import 'package:calendar_app/pages/calendar/widgets/day_widget.dart';
 import 'package:calendar_app/pages/calendar/widgets/month_widget.dart';
 import 'package:calendar_app/pages/calendar/widgets/week_widget.dart';
@@ -83,19 +81,43 @@ class _CalendarPageState extends State<CalendarPage> {
                             ),
                             Row(
                               children: [
-                                AppText(
-                                  currentDay,
-                                  size: 12,
-                                ),
+                                if (state is YearPeriodState) ...{
+                                  AppText(
+                                    '${state.day} ${state.month} ${state.year}' ??
+                                        currentDay,
+                                    size: 12,
+                                    color: state.year ==
+                                            DateFormat('yyyy')
+                                                .format(now)
+                                                .toString()
+                                        ? null
+                                        : Colors.redAccent,
+                                  )
+                                } else if (state is MonthPeriodState) ...{
+                                  AppText(
+                                    '${state.day} ${state.month} ${state.year}' ??
+                                        currentDay,
+                                    size: 12,
+                                    color: state.month ==
+                                            DateFormat('MMMM')
+                                                .format(now)
+                                                .toString()
+                                        ? null
+                                        : Colors.redAccent,
+                                  )
+                                } else ...{
+                                  AppText(
+                                    currentDay,
+                                    size: 12,
+                                  )
+                                },
                                 Container(
                                   width: 70,
                                   height: 30,
                                   child: Container(
                                     alignment: Alignment.topCenter,
                                     child: DropdownButton(
-                                      onTap: () {
-
-                                      },
+                                      onTap: () {},
                                       underline: SizedBox(),
                                       value: monthValue,
                                       onChanged: (value) {
@@ -161,13 +183,13 @@ class _CalendarPageState extends State<CalendarPage> {
                     ),
                     if (state is YearPeriodState) ...{
                       YearWidget(
-                        year:int.parse(state.year),
+                        year: int.parse(state.year),
                       ),
                     },
                     if (state is MonthPeriodState) ...{
                       MonthWidget(
                         month: state.month,
-                        year: '${state.year}',
+                        year: state.year,
                         day: state.day,
                         week: state.week,
                       ),
@@ -175,7 +197,7 @@ class _CalendarPageState extends State<CalendarPage> {
                     if (state is WeekPeriodState) ...{
                       WeekWidget(
                         week: state.week,
-                        year: '${state.year}',
+                        year: state.year,
                         month: state.month,
                         day: state.day,
                       )
